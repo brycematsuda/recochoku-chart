@@ -3,4 +3,6 @@ rvm:
  - "2.0.0"
  - "2.1.8"
  - "2.2.4"
-script: bundle exec rspec spec
+script: bundle exec rspec spec --format doc
+notifications:
+ email: false
