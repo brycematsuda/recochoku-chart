@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'mechanize'
-require 'rank'
+require_relative 'rank'
+require 'json'
 
 class Chart
   attr_reader :url, :rankings
@@ -36,15 +37,31 @@ class Chart
     2.upto(pages) do |page|
       @rankings += url_to_ranks(@url + "p/" + page.to_s + "/")
     end
+
+    n = 1
+    @rankings.each do |rank|
+      rank.num = n.to_s
+      n += 1
+    end
   end
   
   def url_to_ranks(url)
     utr_agent = Mechanize.new
     rank_list = []
+    title_list = []
+    artist_list = []
 
     utr_agent = utr_agent.get(url)
     utr_agent.search('section.box-rank-entry h2.title').children.each do |c|
-      rank_list.push(Rank.new(c.text))
+      title_list.push(c.text)
+    end
+
+    utr_agent.search('section.box-rank-entry p.name').children.each do |d|
+      artist_list.push(d.text)
+    end
+
+    0.upto(title_list.length - 1) do |i|
+      rank_list.push(Rank.new("0", title_list[i], artist_list[i]))
     end
 
     return rank_list
