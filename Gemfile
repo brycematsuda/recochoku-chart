@@ -3,9 +3,5 @@ source 'https://rubygems.org'
 # Testing framework
 gem 'rspec'
 
-# For retrieving Kimono API data & source HTML
-gem 'json'
+# For retrieving source HTML and parsing with Nokogiri (included)
 gem 'mechanize'
-
-# Parse HTML
-gem 'nokogiri'

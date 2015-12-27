@@ -1,6 +1,4 @@
-require 'nokogiri'
 require 'mechanize'
-require 'json'
 
 ##
 # Represents an Recochoku music chart, found at http://recochoku.jp/ranking/
