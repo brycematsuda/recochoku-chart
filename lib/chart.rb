@@ -70,6 +70,10 @@ class Chart
     end
   end
   
+  # Prints chart out in a nice form
+  def to_s
+    puts @rankings.map{ |f| f.num + ". \"" + f.title + "\" by " + f.artist }
+  end
   private
 
   ##
