@@ -1,12 +1,13 @@
 require 'chart'
-require 'rest_client'
+require 'mechanize'
 require 'json'
 
 RSpec.describe Chart do
 
   before :all do
     # Only call the API once
-    response = RestClient.get 'https://www.kimonolabs.com/api/49eulam0?apikey=' + ENV['NOKIRO_API']
+    agent = Mechanize.new
+    response = agent.get('https://www.kimonolabs.com/api/49eulam0?apikey=' + ENV['NOKIRO_API'])
     @json = JSON.parse(response.body)
     @chart = Chart.new
   end
