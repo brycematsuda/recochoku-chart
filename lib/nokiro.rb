@@ -4,7 +4,7 @@ require 'json'
 
 module Nokiro
   ##
-  # Represents an Oricon music chart, found at oricon.co.jp/rank/
+  # Represents an Recochoku music chart, found at http://recochoku.jp/ranking/
   #
   # Attributes:
   # => url - HTTP url of chart
@@ -18,56 +18,19 @@ module Nokiro
     #
     # Params:
     # => chart (optional) - specifies which chart to download.
-    # The four charts available are:
-    #   - Daily Singles Chart ("jsd")
-    #   - Weekly Singles Chart ("jsw")
-    #   - Daily Albums Chart ("jad")
-    #   - Weekly Singles Chart ("jaw")
     #
     # If no specific chart is specified, then it defaults to the Daily Singles Chart.
     #
     ##
     def initialize(chart = nil)
-      agent = Mechanize.new
-      # Grab the most recent chart links from API hosted on Kimono
-      response = agent.get('https://www.kimonolabs.com/api/49eulam0?apikey=' + ENV['NOKIRO_API'])
-      json = JSON.parse(response.body)
-      idx = 0 # location of chart link in JSON response
-      pages = 0 # how many web pages of data the chart contains
-
-      case chart
-      when "jsd" # Daily singles
-        idx = 0
-        pages = 3
-      when "jsw" # Weekly singles
-        idx = 1
-        pages = 5
-      when "jad" # Daily albums
-        idx = 2
-        pages = 3
-      when "jaw" # Weekly albums
-        idx = 3
-        pages = 5
-      else
-        idx = 0 # Default: daily singles
-        pages = 3
+      if (!chart)
+        chart = "single/daily"
       end
 
-      @url = json["results"]["charts"][idx]["link"]
+      @url = "http://recochoku.jp/ranking/" + chart + "/"
 
       # Get all chart data
       @rankings = url_to_ranks(@url)
-
-      2.upto(pages) do |page|
-        @rankings += url_to_ranks(@url + "p/" + page.to_s + "/")
-      end
-
-      # Add in all rank #s after all data has been retrieved.
-      n = 1
-      @rankings.each do |rank|
-        rank.num = n.to_s
-        n += 1
-      end
     end
     
     # Prints chart out in a nice form
@@ -94,17 +57,17 @@ module Nokiro
       utr_agent = utr_agent.get(url)
 
       # Track titles
-      utr_agent.search('section.box-rank-entry h2.title').children.each do |c|
+      utr_agent.search('td.info a.ttl').children.each do |c|
         title_list.push(c.text)
       end
 
       # Artist titles
-      utr_agent.search('section.box-rank-entry p.name').children.each do |d|
+      utr_agent.search('td.info p a:not(:has(img))').children.each do |d|
         artist_list.push(d.text)
       end
 
-      0.upto(title_list.length - 1) do |i|
-        rank_list.push(Nokiro::Rank.new(title_list[i], artist_list[i]))
+      0.upto(49) do |i|
+        rank_list.push(Nokiro::Rank.new((i + 1).to_s, title_list[i], artist_list[i]))
       end
 
       return rank_list
@@ -112,7 +75,7 @@ module Nokiro
   end
 
   ##
-  # Represents a ranked musical item in an Oricon chart.
+  # Represents a ranked musical item in an Recochoku chart.
   # 
   # Attributes:
   # => num - current rank #
@@ -122,9 +85,8 @@ module Nokiro
   ##
   class Rank
     attr_reader :num, :title, :artist
-    attr_accessor :num
 
-    def initialize(title, artist, num = "")
+    def initialize(num, title, artist)
       @num = num
       @title = title
       @artist = artist
