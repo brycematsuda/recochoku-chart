@@ -7,5 +7,8 @@ gem 'rspec'
 gem 'rest-client'
 gem 'json'
 
+# Grab source HTML
+gem 'mechanize'
+
 # Parse HTML
 gem 'nokogiri'
