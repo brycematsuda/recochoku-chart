@@ -72,7 +72,7 @@ module Nokiro
     
     # Prints chart out in a nice form
     def to_s
-      puts @rankings.map{ |f| f.num + ". \"" + f.title + "\" by " + f.artist }
+      puts @rankings.map{ |f| f.num + ". '" + f.title + "' by " + f.artist }
     end
     private
 
@@ -128,6 +128,10 @@ module Nokiro
       @num = num
       @title = title
       @artist = artist
+    end
+
+    def to_s
+      "#{@num}. '#{@title}' by #{@artist}"
     end
   end
 end
