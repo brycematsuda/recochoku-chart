@@ -1,15 +1,15 @@
-require 'chart'
+require 'nokiro'
 require 'mechanize'
 require 'json'
 
-RSpec.describe Chart do
+RSpec.describe Nokiro::Chart do
 
   before :all do
     # Only call the API once
     agent = Mechanize.new
     response = agent.get('https://www.kimonolabs.com/api/49eulam0?apikey=' + ENV['NOKIRO_API'])
     @json = JSON.parse(response.body)
-    @chart = Chart.new
+    @chart = Nokiro::Chart.new
   end
 
   context "with no chart specified" do
@@ -26,14 +26,14 @@ RSpec.describe Chart do
   context "with rankings" do
     it "contains a array of Rank objects" do
       expect(@chart.rankings.class).to eq(Array)
-      expect(@chart.rankings.first.class).to eq(Rank)
+      expect(@chart.rankings.first.class).to eq(Nokiro::Rank)
     end
   end
 
   context "daily singles chart specified" do
     it "returns the daily singles chart url" do
       daily_singles_url = @json["results"]["charts"][0]["link"]
-      @chart = Chart.new("jsd")
+      @chart = Nokiro::Chart.new("jsd")
       expect(@chart.url).to eq daily_singles_url
     end
 
@@ -45,12 +45,12 @@ RSpec.describe Chart do
   context "weekly singles chart specified" do
     it "returns the weekly singles chart url" do
       weekly_singles_url = @json["results"]["charts"][1]["link"]
-      @chart = Chart.new("jsw")
+      @chart = Nokiro::Chart.new("jsw")
       expect(@chart.url).to eq weekly_singles_url
     end
 
     it "contains 50 rankings" do
-      @chart = Chart.new("jsw")
+      @chart = Nokiro::Chart.new("jsw")
       expect(@chart.rankings.length).to eq(50)
     end
   end
@@ -58,7 +58,7 @@ RSpec.describe Chart do
   context "daily albums chart specified" do
     it "returns the daily albums chart url" do
       daily_album_url = @json["results"]["charts"][2]["link"]
-      @chart = Chart.new("jad")
+      @chart = Nokiro::Chart.new("jad")
       expect(@chart.url).to eq daily_album_url
     end
 
@@ -70,13 +70,34 @@ RSpec.describe Chart do
   context "weekly albums chart specified" do
     it "returns the weekly albums chart url" do
       weekly_album_url = @json["results"]["charts"][3]["link"]
-      @chart = Chart.new("jaw")
+      @chart = Nokiro::Chart.new("jaw")
       expect(@chart.url).to eq weekly_album_url
     end
 
     it "contains 50 rankings" do
-      @chart = Chart.new("jaw")
+      @chart = Nokiro::Chart.new("jaw")
       expect(@chart.rankings.length).to eq(50)
     end
+  end
+end
+
+RSpec.describe Nokiro::Rank do
+  before :all do
+    @rank = Nokiro::Rank.new("Test Title", "Test Artist", "5")
+  end
+
+  it "has a rank number" do
+    expect(@rank.num).to be_truthy
+    expect(@rank.num).to eq("5")
+  end
+
+  it "has a title" do
+    expect(@rank.title).to be_truthy
+    expect(@rank.title).to eq("Test Title")
+  end
+
+  it "has an artist" do
+    expect(@rank.artist).to be_truthy
+    expect(@rank.artist).to eq("Test Artist")
   end
 end
