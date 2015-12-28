@@ -9,12 +9,10 @@ Unofficial Ruby API for Recochoku music charts.
 
 >RecoChoku currently allows people to purchase downloads of singles, albums, video clips, ringtones, and more. They also have a flat-rate service that lets you check out all the J-pop you could ask for. The website also a pretty popular website to check out the latest top hits.
 
-----
-##dependencies
+## dependencies
 - Ruby 2.0.0 or greater
 - Mechanize
 
-----
 ## installation
 
     gem install recochoku-chart
@@ -25,7 +23,7 @@ or you can clone this repository and run
     gem build recochoku-chart.gemspec
     gem install ./recochoku-chart-0.0.0.gem
 
-----
+
 ##  quickstart
 
 A Recochoku chart is represented by the RecochokuChart class. By default, it contains the daily singles chart, but a specific chart can be specified in the constructor if the chart URL is of the form:
@@ -40,7 +38,9 @@ Some example parameters that can be put in the constructor:
 * "weekly/single"
 * "daily/album"
 * "weekly/album"
+
 ----
+
     2.3.0 :001 > require 'recochoku-chart'
      => true
     2.3.0 :002 > chart = RecochokuChart.new("single/daily")
@@ -73,19 +73,19 @@ Each individual rank's attributes can also be accessed as such:
     2.3.0 :009 > song.artist
      => "back number" 
 
-----
+
 ## testing
 
 Tests can be run with:
      
     bundle exec rspec spec --format doc
 
-----
+
 ## contributions
 
 If you'd like to add any new features, tests, or bugfixes, please make an appropriate pull request.
 
-----
+
 ## license
 
 MIT
