@@ -34,10 +34,12 @@ A Recochoku chart is represented by the RecochokuChart class. By default, it con
 
 Some example parameters that can be put in the constructor:
 
-* "daily/single"
-* "weekly/single"
-* "daily/album"
-* "weekly/album"
+* "single/daily"
+* "single/weekly"
+* "single/monthly"
+* "album/daily"
+* "album/weekly"
+* "album/monthly"
 
 ----
 
